@@ -1,0 +1,147 @@
+# Main pipeline configuration
+
+# Pipeline configuration
+pipeline:
+  target_symbol: "SPY"
+  start_date: "2020-01-01"
+  end_date: "2023-12-31"
+  prediction_horizon: 5
+  train_test_split: 0.8
+  random_state: 42
+  cache_results: true
+  validation:
+    n_splits: 5
+    min_train_size: 252
+    performance_window: 126
+# Data configuration
+data:
+  data_dir: "data"
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  cache_dir: "data/cache"
+  symbols: ["SPY", "AAPL", "MSFT", "GOOGL"]
+  start_date: "2020-01-01"
+  end_date: "2023-12-31"
+  frequency: "1d"
+  source: "yfinance"
+
+# Feature engineering configuration
+features:
+  selection_method: "combined"
+  n_features: 20
+  feature_groups: ["trend", "momentum", "volatility", "volume"]
+  technical_indicators:
+    - "sma"
+    - "ema"
+    - "macd"
+    - "rsi"
+    - "bbands"
+    - "stoch"
+    - "adx"
+    - "cci"
+    - "aroon"
+    - "williams"
+    - "obv"
+    - "ao"
+    - "kst"
+    - "roc"
+    - "mfi"
+    - "cmf"
+  custom_features:
+    - "returns"
+    - "volatility"
+    - "volume_indicators"
+  use_cache: true
+  cache_dir: "data/cache"
+
+# Model configuration
+model:
+  type: "xgboost"
+  params:
+    n_estimators: 100
+    max_depth: 5
+    learning_rate: 0.1
+    objective: "binary:logistic"
+    random_state: 42
+  training:
+    train_size: 0.8
+    validation_size: 0.1
+    batch_size: 32
+    epochs: 100
+    early_stopping_rounds: 10
+
+# Strategy configuration
+strategy:
+  position_size: 0.1
+  max_positions: 10
+  max_correlation: 0.7
+  rebalance_frequency: "monthly"
+  risk_params:
+    max_drawdown: 0.2
+    stop_loss: 0.02
+    take_profit: 0.04
+    risk_free_rate: 0.02
+    target_volatility: 0.15
+    max_leverage: 1.0
+
+# Execution configuration
+execution:
+  max_order_size: 0.1
+  min_order_size: 0.01
+  order_chunk_size: 0.05
+  max_slippage: 0.002
+  commission_rate: 0.001
+  market_impact_factor: 0.1
+  trading_hours:
+    market_open: "09:30:00"
+    market_close: "16:00:00"
+
+# Risk management configuration
+risk:
+  max_portfolio_var: 0.15
+  max_drawdown: 0.20
+  var_confidence: 0.95
+  max_leverage: 1.0
+  position_limits:
+    max_position_size: 0.10
+    max_correlation: 0.70
+    stop_loss: 0.02
+    take_profit: 0.04
+
+# Monitoring configuration
+monitoring:
+  update_frequency: 60
+  rebalance_threshold: 0.05
+  drift_threshold: 0.02
+  alert_thresholds:
+    drawdown: 0.15
+    var: 0.018
+    leverage: 0.9
+
+# Reporting configuration
+reporting:
+  template_dir: "templates"
+  output_dir: "reports"
+  report_format: "html"
+  include_plots: true
+  include_tables: true
+  include_metrics: true
+  theme: "light"
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/pipeline.log"
+
+# Performance analysis configuration
+analysis:
+  benchmark_symbol: "SPY"
+  risk_free_rate: 0.02
+  analysis_frequency: "daily"
+  rolling_window: 252
+  risk_factors: ["SPY", "AGG", "DBC", "GLD"]
+  plot_style: "seaborn"
+  figure_size: [12, 8]
+  save_plots: true
+  plot_dir: "reports/plots"
